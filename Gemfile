@@ -29,6 +29,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # gem 'rack-cors'
 
 gem 'faraday'
+gem 'fast_jsonapi'
 gem 'figaro'
 
 group :development, :test do
