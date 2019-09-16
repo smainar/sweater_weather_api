@@ -14,5 +14,11 @@ class GiphyFacade
        f.params["limit"] = 5
        f.adapter Faraday.default_adapter
      end
+
+    giphy_response = giphy_conn.get("?api_key=#{ENV["GIPHY-API-KEY"]}&q=#{@location}&limit=5")
+
+    giphy_raw_hash_data = JSON.parse(giphy_response.body, symbolize_names: true)
+
+    require "pry"; binding.pry
   end
 end
