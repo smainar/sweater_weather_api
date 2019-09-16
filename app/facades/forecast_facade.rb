@@ -6,47 +6,60 @@ class ForecastFacade
     @location = location
   end
 
-  def get_weather
-    geocode_conn = Faraday.new(url: "https://maps.googleapis.com") do |f|
+  def geocode_conn
+    Faraday.new(url: "https://maps.googleapis.com") do |f|
       f.params["address"] = location
       f.params["key"] = ENV["GOOGLE-GEOCODING-API"]
       f.adapter Faraday.default_adapter
     end
+  end
 
-    # GoogleGecodeService
-    geocode_response = geocode_conn.get("/maps/api/geocode/json?address=#{location}&key=#{ENV["GOOGLE-GEOCODING-API"]}")
+  def geocode_response
+    geocode_conn.get("/maps/api/geocode/json?address=#{location}&key=#{ENV["GOOGLE-GEOCODING-API"]}")
+  end
 
-    google_geocode_raw_hash_data = JSON.parse(geocode_response.body, symbolize_names: true)
+  def google_geocode_raw_hash_data
+    JSON.parse(geocode_response.body, symbolize_names: true)
+  end
 
-    google_geocode_query_coordinates = google_geocode_raw_hash_data[:results][0][:geometry][:location]
+  def google_geocode_query_coordinates
+    google_geocode_raw_hash_data[:results][0][:geometry][:location]
+  end
 
-    # Get coordinates
-    latitude = google_geocode_query_coordinates[:lat]
+  def latitude
+    google_geocode_query_coordinates[:lat]
+  end
 
-    longitute = google_geocode_query_coordinates[:lng]
+  def longitude
+    google_geocode_query_coordinates[:lng]
+  end
 
-    # DarkskyService
-    darksky_conn = Faraday.new(url: "https://api.darksky.net") do |f|
+  def darksky_conn
+    Faraday.new(url: "https://api.darksky.net") do |f|
       f.adapter Faraday.default_adapter
     end
+  end
 
-    darksky_response = darksky_conn.get("/forecast/#{ENV["DARK-SKY-API"]}/#{latitude},#{longitute}")
+  def darksky_response
+    darksky_conn.get("/forecast/#{ENV["DARK-SKY-API"]}/#{latitude},#{longitude}")
+  end
 
-    darksky_raw_hash_data = JSON.parse(darksky_response.body, symbolize_names: true)
+  def darksky_raw_hash_data
+    JSON.parse(darksky_response.body, symbolize_names: true)
   end
 
   def current_weather
-    CurrentWeather.new(get_weather[:currently])
+    CurrentWeather.new(darksky_raw_hash_data[:currently])
   end
 
   def hourly_weather
-    get_weather[:hourly][:data].map do |hour|
+    darksky_raw_hash_data[:hourly][:data].map do |hour|
       HourlyWeather.new(hour)
     end.first(8)
   end
 
   def daily_weather
-    get_weather[:daily][:data].map do |day|
+    darksky_raw_hash_data[:daily][:data].map do |day|
       DailyWeather.new(day)
     end.first(5)
   end
