@@ -6,7 +6,6 @@ class GiphyFacade
     @id = id
   end
 
-# api.giphy.com/v1/gifs/search?api_key=bZlbEtbdYXEX7rMHU5Kk0ofuoUqFXIqv&q=partly_cloudy&limit=5
   def get_giphy
     geocode_conn = Faraday.new(url: "https://maps.googleapis.com") do |f|
      f.params["address"] = location
@@ -49,10 +48,9 @@ class GiphyFacade
 
    giphy_raw_hash_data = JSON.parse(giphy_response.body, symbolize_names: true)
 
-   require "pry"; binding.pry
-  end
-
-  def daily_weather_gif
-    DailyWeatherGif.new()
+   # Create DailyWeatherGif PORO
+   giphy_raw_hash_data[:data].map do |gif|
+     DailyWeatherGif.new(gif)
+   end
   end
 end
