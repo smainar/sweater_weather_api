@@ -4,7 +4,22 @@ class AntipodesFacade
   end
 
   def get_forecast
+    # Steps to take:
+
+    # Pass city name to Geocode Service to get lat & long
     geocode_service = GoogleGeocodeService.new(@location)
+    # This method retrieves the coordinates for search location
+    coordinates = geocode_service.google_geocode_query_coordinates
+
+    # Pass coordinates to AntipodesService
+    #   This requires me to make an AntipodesService in order to make Faraday call & get response
+    #     Must initialize AntipodesService with what I want to pass, which is coordinates
+    antipodes_service = AntipodesService.new(coordinates)
+    # Pass in coordinates from GeocodeService that returns antipode coordinates
+
+    # Once I get coordinates from AntipodeService, pass those coordinates back to GeocodeService
+    #  this will return name of antipode city, needed for response
+
     coordinates = geocode_service.google_geocode_query_coordinates
 
     # Ultimately, I want the hash to have:
@@ -12,7 +27,8 @@ class AntipodesFacade
     # name of search location from Google Geocode API
     # Must make make AntipodeService for API call / response to get lat & long coordinates
 
-    require "pry"; binding.pry
+    # To retrieve the antipode's name use something like Google's reverse geocoding
+
     darksky_service = DarkskyService.new(coordinates)
 
     # query_string is icon from Darksky API
@@ -25,8 +41,7 @@ class AntipodesFacade
       SomePOROtbd.new(summary_and_temp, antipode_city, search_location)
     end
 
-    # Take query string and return ???
-    antipodes_service = AntipodesService.new()
+    antipodes_service = AntipodesService.new(coordinates)
 
     # list of POROS
     raw_json_hash_data.map do |data|
