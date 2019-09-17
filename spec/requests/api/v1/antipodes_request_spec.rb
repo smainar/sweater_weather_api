@@ -10,8 +10,8 @@ RSpec.describe "Antipode API Endpoint" do
 
     parsed_response = JSON.parse(response.body, symbolize_names: true)
     expect(parsed_response[:data]).to be_present
-    expect(parsed_response[:data].class).to eq(Array)
-    expect(parsed_response[:data][0].keys).to eq([:id, :type, :attributes])
+    expect(parsed_response[:data].class).to eq(Hash)
+    expect(parsed_response[:data].keys).to eq([:id, :type, :attributes])
   end
 end
 

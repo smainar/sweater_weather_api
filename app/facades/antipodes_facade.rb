@@ -22,17 +22,25 @@ class AntipodesFacade
     # Get coordinates for Antipode City
     coordinates_for_antipode_city = antipodes_service.get_formatted_lat_lng_coordinates_to_pass_to_geocode_service
 
-    # Once I get coordinates from AntipodeService, pass those coordinates back to GeocodeService
-    #  this will return name of antipode city, needed for response
-
-    get_antipode_city_name = GoogleGeocodeService.new(coordinates_for_antipode_city)
-
     # Pass coordinates from Antipode City back to look up/return:
     #   forecast: summary & current_temp from Darksky API
     #   name of search location from Google Geocode API
-    #
 
-  #
+    darksky_service = DarkskyService.new(coordinates_for_antipode_city)
+
+    # look up current forecast for antipode city
+    get_current_forecast_for_antipode_city = darksky_service.darksky_current_summary_data
+
+     # What I what/need:
+      antipode_city_name = GoogleGeocodeService.new(coordinates_for_antipode_city).google_geocode_raw_hash_data[:results][0][:address_components][0][:formatted_address]
+      search_location = geocode_service.google_geocode_raw_hash_data[:results][0][:address_components][0][:long_name]
+      AntipodeForecast.new(get_current_forecast_for_antipode_city[:summary], get_current_forecast_for_antipode_city[:temperature], antipode_city_name, search_location)
+
+    # Once I get coordinates from AntipodeService, pass those coordinates back to GeocodeService
+    #  this will return name of antipode city, needed for response
+    # get_antipode_city_ = GoogleGeocodeService.new(coordinates_for_antipode_city)
+
+
   #   # Ultimately, I want the hash to have:
   #   # summary & current_temp from Darksky API
   #   # name of search location from Google Geocode API
@@ -44,13 +52,7 @@ class AntipodesFacade
   #
   #   # query_string is icon from Darksky API
   #
-  #   # Dream Driving:
-  #   darksky_service.darksky_current_summary_data.map do |summary_and_time|
-  #     coordinates = antipode_service.get_coordinates(query_string)
-  #     antipode_city =
-  #     search_location =
-  #     SomePOROtbd.new(summary_and_temp, antipode_city, search_location)
-  #   end
+
   #
   #   # list of POROS
   #   raw_json_hash_data.map do |data|

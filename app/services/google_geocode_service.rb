@@ -7,6 +7,9 @@ class GoogleGeocodeService
     google_geocode_raw_hash_data[:results][0][:geometry][:location]
   end
 
+  def google_geocode_raw_hash_data
+    JSON.parse(geocode_response.body, symbolize_names: true)
+  end
   private
 
   def geocode_conn
@@ -20,7 +23,4 @@ class GoogleGeocodeService
     geocode_conn.get("/maps/api/geocode/json?address=#{@location}")
   end
 
-  def google_geocode_raw_hash_data
-    JSON.parse(geocode_response.body, symbolize_names: true)
-  end
 end

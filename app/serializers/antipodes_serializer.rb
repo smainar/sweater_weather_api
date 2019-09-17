@@ -1,4 +1,6 @@
 class AntipodesSerializer
-  include FastJsonapi::ObjectSerializer
-  attributes :get_forecast
+  # include FastJsonapi::ObjectSerializer
+  def initialize(data)
+    @data = data
+  end
 end
