@@ -31,10 +31,11 @@ class AntipodesFacade
     # look up current forecast for antipode city
     get_current_forecast_for_antipode_city = darksky_service.darksky_current_summary_data
 
-     # What I what/need:
-      antipode_city_name = GoogleGeocodeService.new(coordinates_for_antipode_city).google_geocode_raw_hash_data[:results][0][:address_components][0][:formatted_address]
-      search_location = geocode_service.google_geocode_raw_hash_data[:results][0][:address_components][0][:long_name]
-      AntipodeForecast.new(get_current_forecast_for_antipode_city[:summary], get_current_forecast_for_antipode_city[:temperature], antipode_city_name, search_location)
+    # What I what/need:
+    antipode_city_name = GoogleGeocodeService.new(coordinates_for_antipode_city).google_geocode_raw_hash_data[:results][0][:formatted_address]
+    search_location = geocode_service.google_geocode_raw_hash_data[:results][0][:address_components][0][:long_name]
+    type = antipodes_service.antipode_raw_hash_data[:data][:type]
+    AntipodeForecast.new(get_current_forecast_for_antipode_city[:summary], get_current_forecast_for_antipode_city[:temperature], antipode_city_name, search_location, type)
 
     # Once I get coordinates from AntipodeService, pass those coordinates back to GeocodeService
     #  this will return name of antipode city, needed for response
