@@ -1,5 +1,5 @@
 class AntipodeForecast
-  attr_reader :antipode_city_name, :search_location, :forecast_summary, :forecast_temp
+  attr_reader :antipode_city_name, :search_location, :forecast_summary, :forecast_temp, :type
 
   def initialize(forecast_summary, forecast_temp, antipode_city_name, search_location, type)
     @id = 1
