@@ -1,5 +1,8 @@
 class AntipodesFacade
+  attr_reader :id, :location
+
   def initialize(location)
+    @id = 1
     @location = location
   end
 
@@ -15,38 +18,44 @@ class AntipodesFacade
     #   This requires me to make an AntipodesService in order to make Faraday call & get response
     #     Must initialize AntipodesService with what I want to pass, which is coordinates
     antipodes_service = AntipodesService.new(coordinates)
-    # Pass in coordinates from GeocodeService that returns antipode coordinates
+
+    # Get coordinates for Antipode City
+    coordinates_for_antipode_city = antipodes_service.get_formatted_lat_lng_coordinates_to_pass_to_geocode_service
 
     # Once I get coordinates from AntipodeService, pass those coordinates back to GeocodeService
     #  this will return name of antipode city, needed for response
 
-    coordinates = geocode_service.google_geocode_query_coordinates
+    get_antipode_city_name = GoogleGeocodeService.new(coordinates_for_antipode_city)
 
-    # Ultimately, I want the hash to have:
-    # summary & current_temp from Darksky API
-    # name of search location from Google Geocode API
-    # Must make make AntipodeService for API call / response to get lat & long coordinates
+    # Pass coordinates from Antipode City back to look up/return:
+    #   forecast: summary & current_temp from Darksky API
+    #   name of search location from Google Geocode API
+    #
 
-    # To retrieve the antipode's name use something like Google's reverse geocoding
-
-    darksky_service = DarkskyService.new(coordinates)
-
-    # query_string is icon from Darksky API
-
-    # Dream Driving:
-    darksky_service.darksky_current_summary_data.map do |summary_and_time|
-      coordinates = antipode_service.get_coordinates(query_string)
-      antipode_city =
-      search_location =
-      SomePOROtbd.new(summary_and_temp, antipode_city, search_location)
-    end
-
-    antipodes_service = AntipodesService.new(coordinates)
-
-    # list of POROS
-    raw_json_hash_data.map do |data|
-      SomePOROtbd.new(data)
-    end
+  #
+  #   # Ultimately, I want the hash to have:
+  #   # summary & current_temp from Darksky API
+  #   # name of search location from Google Geocode API
+  #   # Must make make AntipodeService for API call / response to get lat & long coordinates
+  #
+  #   # To retrieve the antipode's name use something like Google's reverse geocoding
+  #
+  #   darksky_service = DarkskyService.new(coordinates)
+  #
+  #   # query_string is icon from Darksky API
+  #
+  #   # Dream Driving:
+  #   darksky_service.darksky_current_summary_data.map do |summary_and_time|
+  #     coordinates = antipode_service.get_coordinates(query_string)
+  #     antipode_city =
+  #     search_location =
+  #     SomePOROtbd.new(summary_and_temp, antipode_city, search_location)
+  #   end
+  #
+  #   # list of POROS
+  #   raw_json_hash_data.map do |data|
+  #     SomePOROtbd.new(data)
+  #   end
   end
 end
 
