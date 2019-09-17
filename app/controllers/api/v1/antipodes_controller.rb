@@ -1,7 +1,7 @@
 class Api::V1::AntipodesController < ApplicationController
   def show
     # require "pry"; binding.pry
-    antipodes_facade = AntipodesFacade.new(params[:location])
+    antipodes_facade = AntipodesFacade.new(params[:loc])
     render json: AntipodesSerializer.new(antipodes_facade.get_forecast)
   end
 end
