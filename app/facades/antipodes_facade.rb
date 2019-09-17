@@ -37,45 +37,10 @@ class AntipodesFacade
     type = antipodes_service.antipode_raw_hash_data[:data][:type]
     AntipodeForecast.new(get_current_forecast_for_antipode_city[:summary], get_current_forecast_for_antipode_city[:temperature], antipode_city_name, search_location, type)
 
-    # Once I get coordinates from AntipodeService, pass those coordinates back to GeocodeService
-    #  this will return name of antipode city, needed for response
-    # get_antipode_city_ = GoogleGeocodeService.new(coordinates_for_antipode_city)
-
-
-  #   # Ultimately, I want the hash to have:
-  #   # summary & current_temp from Darksky API
-  #   # name of search location from Google Geocode API
-  #   # Must make make AntipodeService for API call / response to get lat & long coordinates
-  #
-  #   # To retrieve the antipode's name use something like Google's reverse geocoding
-  #
-  #   darksky_service = DarkskyService.new(coordinates)
-  #
-  #   # query_string is icon from Darksky API
-  #
-
-  #
-  #   # list of POROS
-  #   raw_json_hash_data.map do |data|
-  #     SomePOROtbd.new(data)
-  #   end
+    # What I need to produce for assessment:
+    # Ultimately, I want the hash to have:
+    # summary & current_temp from Darksky API
+    # name of search location from Google Geocode API
+    # Must make make AntipodeService for API call / response to get lat & long coordinates
   end
 end
-
-# RESPONSE:
-# {
-#     "data": [
-#         {
-#             "id": "1",
-#             "type": "antipode",
-#             "attributes": {
-#                 "location_name": "Antipode City Name",
-#                 "forecast": {
-#                     "summary": "Mostly Cloudy,
-#                     "current_temperature": "72",
-#                                 },
-#             "search_location": "Hong Kong"
-#             }
-#         }
-#     ]
-# }
